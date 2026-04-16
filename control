@@ -1,7 +1,7 @@
 Package: com.redcat243.AndroidPattern
 Name: AndroidPattern
 Depends: mobilesubstrate, firmware (>= 6.1.6), firmware (<= 6.1.6)
-Version: 0.0.1
+Version: 1.0.0
 Architecture: iphoneos-arm
 Description: Android style pattern unlock for iOS 6
 Maintainer: redcat243
