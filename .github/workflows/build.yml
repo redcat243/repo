@@ -1,5 +1,5 @@
 name: Build Tweak
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch] # workflow_dispatch lets you run it manually
 
 jobs:
   build:
@@ -11,19 +11,20 @@ jobs:
       - name: Install Theos
         run: |
           bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
-          echo "THEOS=~/theos" >> $GITHUB_ENV
-
-      - name: Setup SDK
+          
+      - name: Setup iOS SDK
         run: |
-          git clone https://github.com/theos/sdks.git ~/theos/sdks
+          curl -LO https://github.com/theos/sdks/raw/master/iPhoneOS14.5.sdk.tar.xz
+          mkdir -p ~/theos/sdks
+          tar -xJf iPhoneOS14.5.sdk.tar.xz -C ~/theos/sdks
           
       - name: Build Package
         run: |
           export THEOS=~/theos
           make package FINALPACKAGE=1
           
-      - name: Upload Artifact
+      - name: Upload Finished Deb
         uses: actions/upload-artifact@v3
         with:
-          name: AndroidPattern-Deb
-          path: packages/*.debs
+          name: AndroidPattern-Package
+          path: packages/*.deb
