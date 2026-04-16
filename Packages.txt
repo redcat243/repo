@@ -1,5 +1,6 @@
 Package: com.redcat243.AndroidPattern
 Name: Android Pattern
+Size: 3228
 Filename: Packages/com.redcat243.androidpattern.deb
 Depends: mobilesubstrate, firmware (>= 6.1.6), firmware (<= 6.1.6), de.j-gessner.unfold
 Version: 1.0.0
