@@ -22,8 +22,8 @@ jobs:
       - name: Build Package
         run: |
           export THEOS=~/theos
-          export PATH="$THEOS/bin:$PATH"
-          make package messages=yes FINALPACKAGE=1
+          # We explicitly tell make where the SDK is just in case
+          make package messages=yes FINALPACKAGE=1 SDKPATH=$THEOS/sdks/iPhoneOS14.5.sdk
           
       - name: Upload Finished Deb
         uses: actions/upload-artifact@v4
