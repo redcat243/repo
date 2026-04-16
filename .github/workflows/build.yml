@@ -14,13 +14,14 @@ jobs:
           
       - name: Setup iOS SDK
         run: |
-          curl -LO https://github.com/theos/sdks/raw/master/iPhoneOS14.5.sdk.tar.xz
-          mkdir -p ~/theos/sdks
-          tar -xJf iPhoneOS14.5.sdk.tar.xz -C ~/theos/sdks
+          # We clone the official SDK repo directly into the Theos folder
+          # --depth 1 makes it much faster by only grabbing the latest files
+          git clone --depth 1 https://github.com/theos/sdks.git ~/theos/sdks
           
       - name: Build Package
         run: |
           export THEOS=~/theos
+          # Added 'messages=yes' so we can see what's happening if it fails
           make package messages=yes FINALPACKAGE=1
           
       - name: Upload Finished Deb
