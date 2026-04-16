@@ -1,10 +1,13 @@
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 
-extern "C" id objc_getClass(const char *name);
+// --- Forward Declarations ---
+@interface SBAwayController : NSObject
++ (id)sharedAwayController;
+- (void)unlockWithSound:(BOOL)sound;
+@end
 
 @interface SBAwayView : UIView
-// Defining this as a UIView fixes the "property 'bounds' cannot be found" error
 @end
 
 @interface MyCustomPatternView : UIView
@@ -25,8 +28,8 @@ extern "C" id objc_getClass(const char *name);
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    // %c() is the Logos way to get a Class. It's better than objc_getClass here.
-    [[objc_getClass("SBAwayController") performSelector:@selector(sharedAwayController)] performSelector:@selector(unlockWithSound:) withObject:(id)YES];
+    // %c is the magic Logos way to handle objc_getClass safely
+    [[%c(SBAwayController) sharedAwayController] unlockWithSound:YES];
 }
 @end
 
@@ -36,7 +39,6 @@ extern "C" id objc_getClass(const char *name);
 - (void)layoutSubviews {
     %orig;
 
-    // Now that we told the compiler SBAwayView is a UIView, self.bounds works!
     if (![self viewWithTag:8080]) {
         MyCustomPatternView *pv = [[MyCustomPatternView alloc] initWithFrame:self.bounds];
         [self addSubview:pv];
