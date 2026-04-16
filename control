@@ -1,4 +1,4 @@
-Package: com.redcat243.AndroidPattern
+Package: com.redcat243.androidpattern
 Name: AndroidPattern
 Depends: mobilesubstrate, firmware (>= 6.1.6), firmware (<= 6.1.6)
 Version: 1.0.0
