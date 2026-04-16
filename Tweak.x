@@ -1,61 +1,40 @@
-#import <Foundation/Foundation.h>
-#include <objc/runtime.h>
-#include <objc/message.h>
+#import <UIKit/UIKit.h>
 
-// Substrate definition
-#ifdef __cplusplus
-extern "C" {
-#endif
-    void MSHookMessageEx(Class _class, SEL sel, IMP imp, IMP *result);
-#ifdef __cplusplus
-}
-#endif
+// Declarations for the compiler
+@interface SBAwayController : NSObject
++ (id)sharedAwayController;
+- (void)unlockWithSound:(BOOL)sound;
+@end
 
-// Helper to send messages without UIKit headers
-#define msg ((id (*)(id, SEL, ...))objc_msgSend)
-
-// Geometry structs (since we can't find CoreGraphics)
-typedef struct { double x; double y; } MyPoint;
-typedef struct { double w; double h; } MySize;
-typedef struct { MyPoint o; MySize s; } MyRect;
-
-@interface MyCustomPatternView : NSObject {
-    id _touchedDots;
-}
-@property (nonatomic, retain) id touchedDots;
+@interface MyCustomPatternView : UIView
+@property (nonatomic, retain) NSMutableArray *touchedDots;
 @end
 
 @implementation MyCustomPatternView
-@synthesize touchedDots = _touchedDots;
-
-- (id)init {
-    self = [super init];
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
     if (self) {
-        _touchedDots = [msg(objc_getClass("NSMutableArray"), sel_registerName("alloc")) init];
+        self.backgroundColor = [UIColor clearColor];
+        self.tag = 8080;
+        self.touchedDots = [[NSMutableArray alloc] init];
     }
     return self;
 }
 
-- (void)touchesEnded:(id)touches withEvent:(id)event {
-    id controller = msg(objc_getClass("SBAwayController"), sel_registerName("sharedAwayController"));
-    ((void (*)(id, SEL, BOOL))objc_msgSend)(controller, sel_registerName("unlockWithSound:"), YES);
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    // Basic logic: Any touch ends = unlock (for testing)
+    // You can add your 1-2-3 pattern logic back here later!
+    [[objc_getClass("SBAwayController") sharedAwayController] unlockWithSound:YES];
 }
 @end
 
-static void (*orig_layoutSubviews)(id, SEL);
-void hooked_layoutSubviews(id self, SEL _cmd) {
-    orig_layoutSubviews(self, _cmd);
-    
-    if (!msg(self, sel_registerName("viewWithTag:"), 8080)) {
-        MyCustomPatternView *pv = [[MyCustomPatternView alloc] init];
-        ((void (*)(id, SEL, long))objc_msgSend)(pv, sel_registerName("setTag:"), 8080);
-        msg(self, sel_registerName("addSubview:"), pv);
+// The actual Hook
+%hook SBAwayView
+- (void)layoutSubviews {
+    %orig;
+    if (![self viewWithTag:8080]) {
+        MyCustomPatternView *pv = [[MyCustomPatternView alloc] initWithFrame:self.bounds];
+        [self addSubview:pv];
     }
 }
-
-__attribute__((constructor)) static void init() {
-    Class target = objc_getClass("SBAwayView");
-    if (target) {
-        MSHookMessageEx(target, sel_registerName("layoutSubviews"), (IMP)hooked_layoutSubviews, (IMP *)&orig_layoutSubviews);
-    }
-}
+%end
