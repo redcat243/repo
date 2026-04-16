@@ -1,6 +1,4 @@
-# Force Theos to use the downloaded SDK instead of Xcode's
 SYSROOT = $(THEOS)/sdks/iPhoneOS14.5.sdk
-
 TARGET := iphone:clang:latest:6.0
 ARCHS = armv7
 
