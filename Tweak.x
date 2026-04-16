@@ -1,12 +1,7 @@
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 
-// --- Forward Declarations ---
-// We tell the compiler these classes exist and what they inherit from
-@interface SBAwayController : NSObject
-+ (id)sharedAwayController;
-- (void)unlockWithSound:(BOOL)sound;
-@end
+extern "C" id objc_getClass(const char *name);
 
 @interface SBAwayView : UIView
 // Defining this as a UIView fixes the "property 'bounds' cannot be found" error
