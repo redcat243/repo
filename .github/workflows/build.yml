@@ -10,19 +10,20 @@ jobs:
 
       - name: Install Theos (Manual)
         run: |
-          # We clone manually to avoid the GitHub API rate limit error
           git clone --recursive https://github.com/theos/theos.git ~/theos
           
       - name: Setup iOS SDK
         run: |
-          # Ensure the sdks folder is ready and clone the headers
           rm -rf ~/theos/sdks
           git clone --depth 1 https://github.com/theos/sdks.git ~/theos/sdks
           
+      - name: Install Dependencies
+        run: brew install ldid
+
       - name: Build Package
         run: |
           export THEOS=~/theos
-          # We explicitly tell make where the SDK is just in case
+          export PATH="$THEOS/bin:$PATH"
           make package messages=yes FINALPACKAGE=1 SDKPATH=$THEOS/sdks/iPhoneOS14.5.sdk
           
       - name: Upload Finished Deb
@@ -30,3 +31,4 @@ jobs:
         with:
           name: AndroidPattern-Package
           path: packages/*.deb
+          
