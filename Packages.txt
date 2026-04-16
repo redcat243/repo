@@ -9,4 +9,4 @@ Description: Android pattern unlock for iOS 6.1.6. Designed for Unfold.
 Maintainer: Redcat243
 Author: Redcat243
 Section: Tweaks
-MD5sum:  12d1a67b05a2547b5932e831171ac1ed5b06e2716ef3e3ab2b55cdc7f4618a82
+MD5sum:  6f82dca7d9fe19eab73b3d9ab64dec64661e6b76397ac61053f3d31ea331ab2c
