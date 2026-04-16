@@ -1,9 +1,0 @@
-Package: com.redcat243.AndroidPattern
-Name: Android Pattern
-Depends: mobilesubstrate, firmware (>= 6.1.6), firmware (<= 6.1.6), de.j-gessner.unfold
-Version: 1.0.0
-Architecture: iphoneos-arm
-Description: Android pattern unlock for iOS 6.1.6. Designed for Unfold.
-Maintainer: Redcat243
-Author: Redcat243
-Section: Tweaks
