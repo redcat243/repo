@@ -6,7 +6,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4 # Updated to v4
+        uses: actions/checkout@v4
 
       - name: Install Theos
         run: |
@@ -17,13 +17,14 @@ jobs:
           curl -LO https://github.com/theos/sdks/raw/master/iPhoneOS14.5.sdk.tar.xz
           mkdir -p ~/theos/sdks
           tar -xJf iPhoneOS14.5.sdk.tar.xz -C ~/theos/sdks
-          - name: Build Package
+          
+      - name: Build Package
         run: |
           export THEOS=~/theos
           make package messages=yes FINALPACKAGE=1
           
       - name: Upload Finished Deb
-        uses: actions/upload-artifact@v4 # Updated to v4
+        uses: actions/upload-artifact@v4
         with:
           name: AndroidPattern-Package
           path: packages/*.deb
