@@ -31,7 +31,7 @@
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     // %c() is the Logos way to get a Class. It's better than objc_getClass here.
-    [[%c(SBAwayController) sharedAwayController] unlockWithSound:YES];
+    [[objc_getClass("SBAwayController") performSelector:@selector(sharedAwayController)] performSelector:@selector(unlockWithSound:) withObject:(id)YES];
 }
 @end
 
