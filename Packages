@@ -3,6 +3,7 @@ Name: AndroidPattern
 Depends: mobilesubstrate, firmware (=> 6.1.6), firmware (=> 6.1.6)
 Version: 2.0.0
 Size: 3228
+Filename: debs/com.redcat243.androidpattern
 Architecture: iphoneos-arm
 Description: Android lock for iOS 6. Draw twice to set! you need to turn off your passcode to make it work.
 Maintainer: RedCat
