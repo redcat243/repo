@@ -1,10 +1,11 @@
 Package: com.redcat243.androidpattern
 Name: AndroidPattern
 Depends: mobilesubstrate
-Version: 1.0.0
+Version: 2.0.0
 Architecture: iphoneos-arm
 Description: Android lock for iOS 6. Draw twice to set! you need to turn off your passcode to make it work.
 Maintainer: RedCat
 Author: RedCat
 Section: Tweaks
 Tag: role::developer, labeling::twks, purpose::extension
+MD5sum: 603322c2c4047c9efc85ba31b6e25c9f
