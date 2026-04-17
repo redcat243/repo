@@ -1,48 +1,63 @@
 #import <UIKit/UIKit.h>
-#import <objc/runtime.h>
 
-// --- Forward Declarations ---
-@interface SBAwayController : NSObject
-+ (id)sharedAwayController;
-- (void)unlockWithSound:(BOOL)sound;
-@end
+// Path where we save the pattern
+#define kSettingsPath @"/var/mobile/Library/Preferences/com.redcat243.androidpattern.plist"
 
-@interface SBAwayView : UIView
-@end
+// States
+static NSString *savedPattern = nil;
+static NSString *firstDraw = nil;
+static BOOL isConfirming = NO;
 
-@interface MyCustomPatternView : UIView
-@property (nonatomic, retain) NSMutableArray *touchedDots;
-@end
+%hook SBLockScreenViewController // Or the specific iOS 6 view controller you are using
 
-// --- Implementation ---
-@implementation MyCustomPatternView
-
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.backgroundColor = [UIColor clearColor];
-        self.tag = 8080;
-        self.touchedDots = [[NSMutableArray alloc] init];
-    }
-    return self;
-}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    // %c is the magic Logos way to handle objc_getClass safely
-    [[%c(SBAwayController) sharedAwayController] unlockWithSound:YES];
-}
-@end
-
-// --- The Hook ---
-%hook SBAwayView
-
-- (void)layoutSubviews {
+- (void)viewDidLoad {
     %orig;
-
-    if (![self viewWithTag:8080]) {
-        MyCustomPatternView *pv = [[MyCustomPatternView alloc] initWithFrame:self.bounds];
-        [self addSubview:pv];
+    
+    // Load existing pattern if it exists
+    NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:kSettingsPath];
+    savedPattern = [dict objectForKey:@"Pattern"];
+    
+    if (!savedPattern) {
+        // STATE 0: No pattern set
+        // Set your UI text to: "Draw a pattern to start"
     }
 }
 
+// This is a pseudo-function representing when the user finishes a gesture
+- (void)onPatternCompleted:(NSString *)drawnPattern {
+    
+    if (!savedPattern) {
+        if (!isConfirming) {
+            // STATE 1: First draw finished
+            firstDraw = [drawnPattern copy];
+            isConfirming = YES;
+            // Update UI: "Draw again to confirm"
+        } else {
+            // STATE 2: Checking confirmation
+            if ([drawnPattern isEqualToString:firstDraw]) {
+                // MATCH! Save it.
+                NSMutableDictionary *saveDict = [NSMutableDictionary dictionary];
+                [saveDict setObject:drawnPattern forKey:@"Pattern"];
+                [saveDict writeToFile:kSettingsPath atomically:YES];
+                
+                savedPattern = [drawnPattern copy];
+                isConfirming = NO;
+                // Update UI: "Pattern Saved!"
+                // Unlock the device
+            } else {
+                // MISMATCH! Reset.
+                isConfirming = NO;
+                firstDraw = nil;
+                // Update UI: "Didn't match. Try again."
+            }
+        }
+    } else {
+        // STATE 3: Normal Mode
+        if ([drawnPattern isEqualToString:savedPattern]) {
+            // Unlock device
+        } else {
+            // "Wrong Pattern"
+        }
+    }
+}
 %end

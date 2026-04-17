@@ -1,12 +1,10 @@
-Package: com.redcat243.AndroidPattern
-Name: Android Pattern
-Size: 3222
-Filename: debs/com.redcat243.androidpattern.deb
-Depends: mobilesubstrate, firmware (>= 6.1.6), firmware (<= 6.1.6), de.j-gessner.unfold
+Package: com.redcat243.androidpattern
+Name: AndroidPattern
+Depends: mobilesubstrate
 Version: 1.0.0
 Architecture: iphoneos-arm
-Description: Android pattern unlock for iOS 6.1.6. Designed for Unfold. TURN OFF YOUR PASSWORD FIRST.
-Maintainer: Redcat243
-Author: Redcat243
+Description: Android lock for iOS 6. Draw twice to set! you need to turn off your passcode to make it work.
+Maintainer: RedCat
+Author: RedCat
 Section: Tweaks
-MD5sum: 259d885fdcde56b37f53a3ecc19fbcb5
+Tag: role::developer, labeling::twks, purpose::extension
