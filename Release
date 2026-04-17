@@ -1,1 +1,8 @@
-redcat243s cydia repo
+Origin: RedCat243
+Label: RedCat243's cydia repo
+Suite: stable
+Version: 1.0
+Codename: everyios
+Architectures: iphoneos-arm
+Components: main
+Description: stuff for only 1 iOS and stuff for other iOS.
