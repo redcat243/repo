@@ -17,12 +17,12 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y build-essential libgtk-3-dev libwebkit2gtk-4.0-dev
+        run: sudo apt-get update && sudo apt-get install -y build-essential libgtk-3-dev libwebkit2gtk-4.0-dev dpkg-dev
 
       - name: Compile Application
         run: make
 
-      - name: Prepare Debian Package
+      - name: Prepare Debian Package Base
         run: |
           mkdir -p package_build/usr/bin
           mkdir -p package_build/usr/share/catbrowser/about.rtfd
@@ -32,30 +32,24 @@ jobs:
           chmod 755 package_build/usr/bin/catbrowser
           dpkg-deb --build package_build catbrowser_1.0_amd64.deb
 
-      - name: Upload .deb Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: catbrowser-debian-package
-          path: catbrowser_1.0_amd64.deb
+      - name: Create APT Repository Structure
+        run: |
+          mkdir -p public/apt
+          # Move the .deb package into the public folder
+          cp catbrowser_1.0_amd64.deb public/apt/
+          
+          # Generate the Packages index required by apt
+          cd public
+          dpkg-scanpackages apt /dev/null > apt/Packages
+          gzip -k -f apt/Packages
 
-  deploy-pages:
-    runs-on: ubuntu-latest
-    needs: build-deb
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Prepare Pages Frontend
+        run: |
+          cp cathome.html public/index.html
+          cp -r about.rtfd public/
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
-
-      - name: Prepare Pages Artifact
-        run: |
-          mkdir -p public
-          cp cathome.html public/index.html
-          cp -r about.rtfd public/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
