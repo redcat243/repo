@@ -34,14 +34,14 @@ jobs:
 
       - name: Create APT Repository Structure
         run: |
-          mkdir -p public/apt
-          # Move the .deb package into the public folder
-          cp catbrowser_1.0_amd64.deb public/apt/
+          mkdir -p public
+          # Copy the .deb directly to the public root folder
+          cp catbrowser_1.0_amd64.deb public/
           
-          # Generate the Packages index required by apt
+          # Generate the Packages index relative to the public root
           cd public
-          dpkg-scanpackages apt /dev/null > apt/Packages
-          gzip -k -f apt/Packages
+          dpkg-scanpackages . /dev/null > Packages
+          gzip -k -f Packages
 
       - name: Prepare Pages Frontend
         run: |
