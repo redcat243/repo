@@ -1,13 +1,14 @@
-#define WEBVIEW_IMPLEMENTATION
-#define WEBVIEW_GTK
-#include "webview.h"
-
 #include <iostream>
 #include <string>
 #include <unistd.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
+
+// Include C++ headers first, then define and include the webview library
+#define WEBVIEW_IMPLEMENTATION
+#define WEBVIEW_GTK
+#include "webview.h"
 
 std::string get_executable_dir() {
     char result[PATH_MAX];
@@ -57,4 +58,3 @@ int main() {
     webview_exit(&w);
     return 0;
 }
-EOF
