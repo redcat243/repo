@@ -35,13 +35,24 @@ jobs:
       - name: Create APT Repository Structure
         run: |
           mkdir -p public
-          # Copy the .deb directly to the public root folder
+          # Move the deb file to the public directory
           cp catbrowser_1.0_amd64.deb public/
           
-          # Generate the Packages index relative to the public root
-          cd public
-          dpkg-scanpackages . /dev/null > Packages
-          gzip -k -f Packages
+          # CRITICAL FIX: Generate standard index file manually to avoid path doubling issues
+          echo "Package: catbrowser" > public/Packages
+          echo "Version: 1.0.0" >> public/Packages
+          echo "Architecture: amd64" >> public/Packages
+          echo "Maintainer: redcat243 <redcat243@github.com>" >> public/Packages
+          echo "Depends: libgtk-3-0, libwebkit2gtk-4.0-37" >> public/Packages
+          echo "Filename: catbrowser_1.0_amd64.deb" >> public/Packages
+          echo "Size: $(wc -c < catbrowser_1.0_amd64.deb)" >> public/Packages
+          echo "MD5sum: $(md5sum catbrowser_1.0_amd64.deb | cut -d' ' -f1)" >> public/Packages
+          echo "SHA1: $(sha1sum catbrowser_1.0_amd64.deb | cut -d' ' -f1)" >> public/Packages
+          echo "SHA256: $(sha256sum catbrowser_1.0_amd64.deb | cut -d' ' -f1)" >> public/Packages
+          echo "Description: CatBrowser - Private WebKit Core Enabled Browser" >> public/Packages
+          
+          # Compress the Packages file
+          gzip -c public/Packages > public/Packages.gz
 
       - name: Prepare Pages Frontend
         run: |
