@@ -1,0 +1,8 @@
+Package: catbrowser
+Version: 1.0.0
+Section: web
+Priority: optional
+Architecture: amd64
+Depends: libgtk-3-0, libwebkit2gtk-4.0-37
+Maintainer: redcat243 <redcat243@github.com>
+Description: CatBrowser - Private WebKit Core Enabled Browser
